@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "lib": [
+      "ESNext",
+      "DOM",
+    ],
+    "strictNullChecks": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "rootDir": "./src",
+  }
+}

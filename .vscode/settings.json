@@ -1,0 +1,12 @@
+{
+  "files.autoSave": "onFocusChange",
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "emmet.showExpandedAbbreviation": "never",
+  "emmet.showAbbreviationSuggestions": false,
+}
