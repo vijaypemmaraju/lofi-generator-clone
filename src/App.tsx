@@ -3,68 +3,7 @@ import * as Tone from 'tone';
 import { motion } from 'framer-motion';
 import React, { FC, useEffect, useState } from 'react';
 import between, { betweenInt } from './between';
-
-type Chord = {
-  name: string;
-  notes: string[];
-};
-
-const melodyNotes: Chord[] = [
-  {
-    name: 'CMaj7',
-    notes: ['C4', 'D4', 'E4', 'G4'],
-  },
-  {
-    name: 'Am7',
-    notes: ['A3', 'B4', 'C4', 'E4'],
-  },
-  {
-    name: 'Em7',
-    notes: ['E3', 'G3', 'B3', 'D4'],
-  },
-  {
-    name: 'FMaj7',
-    notes: ['F3', 'A3', 'C4', 'E4'],
-  },
-];
-
-const harmonyNotes: Chord[] = [
-  {
-    name: 'CMaj7',
-    notes: ['E4', 'F4', 'G4', 'C4'],
-  },
-  {
-    name: 'Am7',
-    notes: ['C3', 'D4', 'E4', 'G4'],
-  },
-  {
-    name: 'Em7',
-    notes: ['E3', 'G3', 'B3', 'D4'],
-  },
-  {
-    name: 'FMaj7',
-    notes: ['F3', 'A3', 'C4', 'E4'],
-  },
-];
-
-const chords = [
-  {
-    name: 'CMaj7',
-    notes: ['C4', 'E4', 'G4', 'B4'],
-  },
-  {
-    name: 'Am7',
-    notes: ['A3', 'C4', 'E4', 'G4'],
-  },
-  {
-    name: 'Em7',
-    notes: ['E3', 'G3', 'B3', 'D4'],
-  },
-  {
-    name: 'FMaj7',
-    notes: ['F3', 'A3', 'C4', 'E4'],
-  },
-];
+import { melodyNotes, harmonyNotes, chords } from './notes';
 
 const App: FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -80,6 +19,11 @@ const App: FC = () => {
         }
 
         await Tone.loaded();
+
+        const chosenChordProgressionIndex = betweenInt(0, chords.length - 1);
+        const chosenMelody = melodyNotes[chosenChordProgressionIndex];
+        const chosenHarmony = harmonyNotes[chosenChordProgressionIndex];
+        const chosenChord = chords[chosenChordProgressionIndex];
 
         const synth = new Tone.PolySynth({
           volume: -5,
@@ -100,7 +44,7 @@ const App: FC = () => {
             release: 1,
             volume: -10,
             onload: () => {
-              s.chain(filter, filter2, filter3, filter4, Tone.Destination);
+              s.chain(filter2, filter3, filter4, Tone.Destination);
               resolve(s);
             },
           }).toDestination();
@@ -153,8 +97,8 @@ const App: FC = () => {
         let position2 = 0;
 
         Tone.Transport.scheduleRepeat(time => {
-          const { notes } = melodyNotes[currentChord];
-          const { notes: harmony } = harmonyNotes[currentChord];
+          const { notes } = chosenMelody[currentChord];
+          const { notes: harmony } = chosenHarmony[currentChord];
           const delay = 0.03;
           const noteChoice = betweenInt(0, notes.length);
           if (Math.random() < 0.5) {
@@ -189,7 +133,7 @@ const App: FC = () => {
         const chordRhythm = [1, 1, 0, 1, 0, 1, 0, 1];
 
         Tone.Transport.scheduleRepeat(time => {
-          const { notes } = chords[currentChord];
+          const { notes } = chosenChord[currentChord];
           if (chordRhythm[position2 - 1] === 0) {
             return;
           }
@@ -208,16 +152,16 @@ const App: FC = () => {
 
         const rainfall = new Tone.Player().toDestination();
         await rainfall.load('rainfall.wav');
-        rainfall.volume.value = -20;
+        rainfall.volume.value = -15;
         Tone.Transport.scheduleOnce(() => {
-          rainfall.connect(filter).start();
+          rainfall.chain(filter, filter2, filter3).start();
         }, '0');
 
         const vinyl = new Tone.Player().toDestination();
         await vinyl.load('vinyl.flac');
         vinyl.volume.value = -20;
         Tone.Transport.scheduleOnce(() => {
-          vinyl.connect(filter).start();
+          vinyl.chain(filter, filter2, filter3).start();
         }, '0');
 
         Tone.Transport.start();
