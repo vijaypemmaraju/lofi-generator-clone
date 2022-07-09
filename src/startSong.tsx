@@ -69,7 +69,7 @@ async function addAmbientSounds(
   const sampler = await new Promise<Tone.Sampler>(resolve => {
     const s = new Tone.Sampler({
       urls: {
-        C4: 'samples/rainfall.wav',
+        C4: 'samples/rainfall.mp3',
         D4: 'samples/vinyl.flac',
       },
       release: 1,
