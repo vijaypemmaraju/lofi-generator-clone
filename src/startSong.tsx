@@ -68,12 +68,12 @@ export default async function startSong() {
   const sampler = await new Promise<Tone.Sampler>(resolve => {
     const s = new Tone.Sampler({
       urls: {
-        C4: 'samples/kick.wav',
-        D4: 'samples/hat.wav',
-        E4: 'samples/rim.wav',
+        C4: 'samples/kick 1.wav',
+        D4: 'samples/hat 3.wav',
+        E4: 'samples/snare 1.wav',
       },
       release: 1,
-      volume: -10,
+      volume: 0,
       onload: () => {
         s.chain(
           filter2,

@@ -8,7 +8,7 @@ export const beats = [
 
 export const velocityMappings = {
   C4: [0.2, 0.25],
-  D4: [0.01, 0.03],
+  D4: [0.1, 0.15],
   E4: [0.125, 0.15],
 };
 
