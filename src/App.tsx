@@ -8,6 +8,7 @@ import useStore from './useStore';
 
 const App: FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const [toneInitialized, setToneInitialized] = useState(false);
   const isKick = useStore(store => store.isKick);
   const isSnare = useStore(store => store.isSnare);
@@ -26,9 +27,11 @@ const App: FC = () => {
         }
 
         await Tone.loaded();
+        setIsLoaded(true);
 
         await startSong();
       } else {
+        setIsLoaded(false);
         Tone.Transport.stop();
       }
     })();
@@ -73,21 +76,28 @@ const App: FC = () => {
                 'rounded-full shadow-lg w-[200px] h-[200px] flex flex-col items-center justify-center',
               )}
             >
-              <button
-                type="button"
-                className="w-[100px] h-[100px] bg-transparent border-none btn hover:border-none hover:bg-transparent p-0"
-                onClick={() => setIsPlaying(!isPlaying)}
-              >
-                <motion.div
-                  className={cx(
-                    'w-[100px] h-[100px]',
-                    isPlaying && 'bg-gray-300',
-                    !isPlaying &&
-                      'w-0 h-0 border-solid border-t-[50px] border-t-transparent border-b-[50px] border-b-transparent border-l-[100px] border-l-gray-300',
-                  )}
-                  layout
-                />
-              </button>
+              {isPlaying && !isLoaded && (
+                <div className="text-center">
+                  <progress className="w-20 progress progress-info" />
+                </div>
+              )}
+              {(!isPlaying || (isPlaying && isLoaded)) && (
+                <button
+                  type="button"
+                  className="w-[100px] h-[100px] bg-transparent border-none btn hover:border-none hover:bg-transparent p-0"
+                  onClick={() => setIsPlaying(!isPlaying)}
+                >
+                  <motion.div
+                    className={cx(
+                      'w-[100px] h-[100px]',
+                      isPlaying && 'bg-gray-300',
+                      !isPlaying &&
+                        'w-0 h-0 border-solid border-t-[50px] border-t-transparent border-b-[50px] border-b-transparent border-l-[100px] border-l-gray-300',
+                    )}
+                    layout
+                  />
+                </button>
+              )}
             </motion.div>
           </motion.div>
         </motion.div>
