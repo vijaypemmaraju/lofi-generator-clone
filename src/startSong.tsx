@@ -11,30 +11,46 @@ function startDrums(sampler: Tone.Sampler) {
   let position = 0;
   const beat = beats[betweenInt(0, beats.length - 1)];
 
-  Tone.Transport.scheduleRepeat(time => {
-    const delay = 0.03;
-    beat[position].forEach(sample => {
-      const chosenSample = Math.random() > 0.9 ? 'D4' : sample;
-      if (chosenSample === 'C4') {
-        useStore.getState().setIsBeat(true);
-        setTimeout(() => {
-          useStore.getState().setIsBeat(false);
-        }, 100);
+  Tone.Transport.scheduleRepeat(
+    time => {
+      const delay = 0.03;
+      beat[position].forEach(sample => {
+        const chosenSample = Math.random() > 0.9 ? 'D4' : sample;
+        if (chosenSample === 'C4') {
+          useStore.getState().setIsKick(true);
+          setTimeout(() => {
+            useStore.getState().setIsKick(false);
+          }, 100);
+        }
+        if (chosenSample === 'D4') {
+          useStore.getState().setIsHat(true);
+          setTimeout(() => {
+            useStore.getState().setIsHat(false);
+          }, 100);
+        }
+        if (chosenSample === 'E4') {
+          useStore.getState().setIsSnare(true);
+          setTimeout(() => {
+            useStore.getState().setIsSnare(false);
+          }, 100);
+        }
+        sampler.triggerAttack(
+          chosenSample,
+          time + between(0.01, delay),
+          between(
+            velocityMappings[chosenSample][0],
+            velocityMappings[chosenSample][1],
+          ),
+        );
+      });
+      position += 1;
+      if (position >= beat.length) {
+        position = 0;
       }
-      sampler.triggerAttack(
-        chosenSample,
-        time + between(0.01, delay),
-        between(
-          velocityMappings[chosenSample][0],
-          velocityMappings[chosenSample][1],
-        ),
-      );
-    });
-    position += 1;
-    if (position >= beat.length) {
-      position = 0;
-    }
-  }, '8n');
+    },
+    '8n',
+    '0:16:0',
+  );
 
   Tone.Transport.on('stop', () => {
     sampler.releaseAll();
@@ -72,6 +88,21 @@ async function addAmbientSounds(
   });
 }
 
+const synths = [
+  new Tone.PolySynth({
+    voice: Tone.Synth,
+    volume: -5,
+  }),
+  new Tone.PolySynth({
+    voice: Tone.FMSynth,
+    volume: 5,
+  }),
+  new Tone.PolySynth({
+    voice: Tone.AMSynth,
+    volume: 5,
+  }),
+];
+
 export default async function startSong() {
   const chosenChordProgressionIndex = betweenInt(
     0,
@@ -79,9 +110,10 @@ export default async function startSong() {
   );
   const chosenChordProgression = chordProgressions[chosenChordProgressionIndex];
   const synth = new Tone.PolySynth({
+    voice: Tone.Synth,
     volume: -5,
   }).toDestination();
-  const polysynth = new Tone.PolySynth(Tone.Synth).toDestination();
+  const polysynth = synths[betweenInt(0, synths.length - 1)].toDestination();
   const filter = new Tone.Filter(1000, 'lowpass');
   const filter2 = new Tone.Filter(1000, 'lowpass');
   const filter3 = new Tone.Filter(1000, 'lowpass');
@@ -124,11 +156,20 @@ export default async function startSong() {
 
   let currentChord = 0;
 
+  let lastNoteChoice;
+
+  let harmonyCountdown = 32;
+
   Tone.Transport.scheduleRepeat(time => {
+    harmonyCountdown -= 1;
     const notes = chosenChordProgression[currentChord];
     const delay = 0.03;
-    const noteChoice = betweenInt(0, notes.length);
-    const harmonyNoteChoice = betweenInt(0, notes.length);
+    const noteChoice =
+      Math.random() < 0.5
+        ? (lastNoteChoice + 1) % notes.length
+        : betweenInt(0, notes.length);
+    lastNoteChoice = noteChoice;
+    const harmonyNoteChoice = (noteChoice + 1) % notes.length;
     if (Math.random() < 0.5) {
       synth
         .chain(filter, filter2, filter3, vol)
@@ -138,14 +179,16 @@ export default async function startSong() {
           time + between(0.01, delay),
           between(0.1, 0.2),
         );
-      synth
-        .chain(filter, filter2, filter3, vol)
-        .triggerAttackRelease(
-          notes[harmonyNoteChoice],
-          '8n',
-          time + between(0.01, delay),
-          between(0.05, 0.1),
-        );
+      if (harmonyCountdown <= 0) {
+        synth
+          .chain(filter, filter2, filter3, vol)
+          .triggerAttackRelease(
+            notes[harmonyNoteChoice],
+            '8n',
+            time + between(0.01, delay),
+            between(0.05, 0.1),
+          );
+      }
     }
     position2 += 1;
     if (position2 > 8) {

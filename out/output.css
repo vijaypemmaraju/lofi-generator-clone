@@ -1490,6 +1490,10 @@ html {
   border-bottom-color: hsl(var(--bc) / 20%);
 }
 
+.absolute {
+  position: absolute;
+}
+
 .flex {
   display: flex;
 }
@@ -1510,6 +1514,10 @@ html {
   height: 250px;
 }
 
+.h-full {
+  height: 100%;
+}
+
 .w-\[100px\] {
   width: 100px;
 }
@@ -1524,6 +1532,10 @@ html {
 
 .w-\[250px\] {
   width: 250px;
+}
+
+.w-full {
+  width: 100%;
 }
 
 .flex-col {

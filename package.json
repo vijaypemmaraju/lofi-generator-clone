@@ -31,7 +31,6 @@
     "react-dom": "^17.0.2",
     "react-timer-hook": "^3.0.5",
     "shortid": "^2.2.16",
-    "tonal": "^2.2.2",
     "tone": "^14.7.77",
     "zustand": "^3.7.1"
   },

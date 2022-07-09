@@ -13,16 +13,22 @@ export const velocityMappings = {
 };
 
 export const chordProgressions: string[][][] = [
+  // [
+  //   Chord.get('C4M7').notes,
+  //   Chord.get('A3m7').notes,
+  //   Chord.get('E3m7').notes,
+  //   Chord.get('F3M7').notes,
+  // ],
+  // [
+  //   Chord.get('Eb3M7').notes,
+  //   Chord.get('C3m7').notes,
+  //   Chord.get('F3m7').notes,
+  //   Chord.get('Ab3M7').notes,
+  // ],
   [
-    Chord.get('C4M7').notes,
-    Chord.get('A3m7').notes,
-    Chord.get('E3m7').notes,
-    Chord.get('F3M7').notes,
-  ],
-  [
+    Chord.get('C3M7').notes,
     Chord.get('Eb3M7').notes,
-    Chord.get('C3m7').notes,
-    Chord.get('F3m7').notes,
-    Chord.get('Ab3M7').notes,
+    Chord.get('Db3M7').notes,
+    Chord.get('G3m7').notes,
   ],
 ];
