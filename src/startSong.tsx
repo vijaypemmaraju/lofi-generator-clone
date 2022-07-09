@@ -7,6 +7,9 @@ import useStore from './useStore';
 const vol = new Tone.Volume(0).toDestination();
 vol.mute = true;
 
+const betweenWithVolume = (min: number, max: number) =>
+  between(min, max) * useStore.getState().volume;
+
 function startDrums(sampler: Tone.Sampler) {
   let position = 0;
   const beat = beats[betweenInt(0, beats.length - 1)];
@@ -37,7 +40,7 @@ function startDrums(sampler: Tone.Sampler) {
         sampler.triggerAttack(
           chosenSample,
           time + between(0.01, delay),
-          between(
+          betweenWithVolume(
             velocityMappings[chosenSample][0],
             velocityMappings[chosenSample][1],
           ),
@@ -82,6 +85,12 @@ async function addAmbientSounds(
     sampler.triggerAttack('D4');
   }, '0');
 
+  useStore.subscribe(() => {
+    // convert to decibels
+    sampler.volume.set({
+      value: useStore.getState().volume * 25 - 50,
+    });
+  });
   Tone.Transport.on('stop', () => {
     sampler.releaseAll();
     sampler.disconnect();
@@ -177,7 +186,7 @@ export default async function startSong() {
           notes[noteChoice],
           '8n',
           time + between(0.01, delay),
-          between(0.1, 0.2),
+          betweenWithVolume(0.1, 0.2),
         );
       if (harmonyCountdown <= 0) {
         synth
@@ -186,7 +195,7 @@ export default async function startSong() {
             notes[harmonyNoteChoice],
             '8n',
             time + between(0.01, delay),
-            between(0.05, 0.1),
+            betweenWithVolume(0.05, 0.1),
           );
       }
     }
@@ -215,7 +224,7 @@ export default async function startSong() {
           note,
           '8n',
           time + between(0.01, delay),
-          between(0.025, 0.01),
+          betweenWithVolume(0.025, 0.01),
         );
     }
   }, '4n');
