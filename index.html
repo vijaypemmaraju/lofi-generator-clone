@@ -1,0 +1,96 @@
+<html data-theme="mytheme">
+
+<head>
+  <title>Lofi Generator Clone</title>
+  <meta charset="utf-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@100;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./output.css">
+  <style>
+
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      outline: 0;
+      font-family: 'Roboto Mono', monospace;
+
+      overflow-x: hidden;
+    }
+
+    #ui {}
+
+    progress[value]::-webkit-progress-value {
+        transition: width 0.5s;
+    }
+
+    /* The typing effect */
+    @keyframes typing {
+      from {
+        width: 0
+      }
+
+      to {
+        width: 100%
+      }
+    }
+
+    /* The typewriter cursor effect */
+    @keyframes blink-caret {
+
+      from,
+      to {
+        border-color: transparent
+      }
+
+      50% {
+        border-color: orange;
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      position: fixed;
+      /* 1px wider than Lion. */
+      /* This is more usable for users trying to click it. */
+      background-color: rgba(0, 0, 0, 0);
+      -webkit-border-radius: 100px;
+    }
+
+    /* hover effect for both scrollbar area, and scrollbar 'thumb' */
+    ::-webkit-scrollbar:hover {
+      background-color: rgba(0, 0, 0, 0.09);
+    }
+
+    /* The scrollbar 'thumb' ...that marque oval shape in a scrollbar */
+    ::-webkit-scrollbar-thumb:vertical {
+      /* This is the EXACT color of Mac OS scrollbars.
+     Yes, I pulled out digital color meter */
+      background: #424242;
+      -webkit-border-radius: 100px;
+    }
+
+    ::-webkit-scrollbar-thumb:vertical:active {
+      background: rgba(0, 0, 0, 0.61);
+      /* Some darker color when you click it */
+      -webkit-border-radius: 100px;
+    }
+  </style>
+  </style>
+</head>
+
+<body>
+  <div id="ui" />
+  <script src="./index.js"></script>
+</body>
+
+</html>
