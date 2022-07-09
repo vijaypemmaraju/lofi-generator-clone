@@ -433,9 +433,9 @@ html {
   --sf: 316 70% 40%;
   --af: 175 70% 33%;
   --nf: 221 39% 9%;
-  --b2: 240 15% 22%;
-  --b3: 240 15% 19%;
-  --bc: 240 51% 85%;
+  --b2: 311 20% 41%;
+  --b3: 311 20% 37%;
+  --bc: 311 100% 89%;
   --pc: 217 100% 92%;
   --sc: 316 100% 90%;
   --ac: 175 100% 8%;
@@ -457,7 +457,7 @@ html {
   --s: 316 70% 50%;
   --a: 175 70% 41%;
   --n: 221 39% 11%;
-  --b1: 240 15% 24%;
+  --b1: 311 20% 46%;
   --in: 198 93% 60%;
   --su: 158 64% 52%;
   --wa: 43 96% 56%;
@@ -1490,12 +1490,12 @@ html {
   border-bottom-color: hsl(var(--bc) / 20%);
 }
 
-.absolute {
-  position: absolute;
-}
-
 .flex {
   display: flex;
+}
+
+.h-\[200px\] {
+  height: 200px;
 }
 
 .h-\[100px\] {
@@ -1506,16 +1506,8 @@ html {
   height: 0px;
 }
 
-.h-\[200px\] {
-  height: 200px;
-}
-
-.h-\[250px\] {
-  height: 250px;
-}
-
-.h-full {
-  height: 100%;
+.w-\[200px\] {
+  width: 200px;
 }
 
 .w-\[100px\] {
@@ -1524,18 +1516,6 @@ html {
 
 .w-0 {
   width: 0px;
-}
-
-.w-\[200px\] {
-  width: 200px;
-}
-
-.w-\[250px\] {
-  width: 250px;
-}
-
-.w-full {
-  width: 100%;
 }
 
 .flex-col {
@@ -1585,11 +1565,6 @@ html {
 .border-l-gray-300 {
   --tw-border-opacity: 1;
   border-left-color: rgb(209 213 219 / var(--tw-border-opacity));
-}
-
-.bg-gray-100 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(243 244 246 / var(--tw-bg-opacity));
 }
 
 .bg-transparent {
