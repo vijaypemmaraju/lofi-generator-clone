@@ -1,9 +1,9 @@
-import { Chord } from 'tonal';
+import { Chord } from '@tonaljs/tonal';
 
 export const beats = [
   [['C4'], ['D4'], ['D4', 'E4'], ['D4'], [], ['C4'], ['D4', 'E4'], ['D4']],
-  [['E4'], ['D4'], ['D4', 'E4'], ['D4'], [], ['E4'], ['D4', 'E4'], ['D4']],
-  [[], ['D4'], ['D4', 'E4'], [], ['D4'], ['D4'], ['D4', 'E4'], ['D4']],
+  // [['E4'], ['D4'], ['D4', 'E4'], ['D4'], [], ['E4'], ['D4', 'E4'], ['D4']],
+  // [[], ['D4'], ['D4', 'E4'], [], ['D4'], ['D4'], ['D4', 'E4'], ['D4']],
 ];
 
 export const velocityMappings = {
@@ -14,15 +14,15 @@ export const velocityMappings = {
 
 export const chordProgressions: string[][][] = [
   [
-    Chord.notes('C4M7'),
-    Chord.notes('A3m7'),
-    Chord.notes('E3m7'),
-    Chord.notes('F3M7'),
+    Chord.get('C4M7').notes,
+    Chord.get('A3m7').notes,
+    Chord.get('E3m7').notes,
+    Chord.get('F3M7').notes,
   ],
   [
-    Chord.notes('Eb3M7'),
-    Chord.notes('C3m7'),
-    Chord.notes('F3m7'),
-    Chord.notes('Ab3M7'),
+    Chord.get('Eb3M7').notes,
+    Chord.get('C3m7').notes,
+    Chord.get('F3m7').notes,
+    Chord.get('Ab3M7').notes,
   ],
 ];

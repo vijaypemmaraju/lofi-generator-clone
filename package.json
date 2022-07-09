@@ -9,6 +9,7 @@
     "@emotion/react": "^11.8.1",
     "@emotion/styled": "^11.8.1",
     "@fluentui/merge-styles": "^8.4.0",
+    "@tonaljs/tonal": "^4.6.5",
     "@twurple/api": "^5.1.6",
     "@twurple/auth": "^5.1.6",
     "@twurple/chat": "^5.1.6",

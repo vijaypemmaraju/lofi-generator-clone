@@ -2,6 +2,10 @@ import * as Tone from 'tone';
 
 import between, { betweenInt } from './between';
 import { beats, chordProgressions, velocityMappings } from './notes';
+import useStore from './useStore';
+
+const vol = new Tone.Volume(0).toDestination();
+vol.mute = true;
 
 function startDrums(sampler: Tone.Sampler) {
   let position = 0;
@@ -11,6 +15,12 @@ function startDrums(sampler: Tone.Sampler) {
     const delay = 0.03;
     beat[position].forEach(sample => {
       const chosenSample = Math.random() > 0.9 ? 'D4' : sample;
+      if (chosenSample === 'C4') {
+        useStore.getState().setIsBeat(true);
+        setTimeout(() => {
+          useStore.getState().setIsBeat(false);
+        }, 100);
+      }
       sampler.triggerAttack(
         chosenSample,
         time + between(0.01, delay),
@@ -25,6 +35,11 @@ function startDrums(sampler: Tone.Sampler) {
       position = 0;
     }
   }, '8n');
+
+  Tone.Transport.on('stop', () => {
+    sampler.releaseAll();
+    sampler.disconnect();
+  });
 }
 
 async function addAmbientSounds(
@@ -32,19 +47,29 @@ async function addAmbientSounds(
   filter2: Tone.Filter,
   filter3: Tone.Filter,
 ) {
-  const rainfall = new Tone.Player().toDestination();
-  await rainfall.load('rainfall.wav');
-  rainfall.volume.value = -15;
-  Tone.Transport.scheduleOnce(() => {
-    rainfall.chain(filter, filter2, filter3).start();
+  const sampler = await new Promise<Tone.Sampler>(resolve => {
+    const s = new Tone.Sampler({
+      urls: {
+        C4: 'samples/rainfall.wav',
+        D4: 'samples/vinyl.flac',
+      },
+      release: 1,
+      volume: -25,
+      onload: () => {
+        s.chain(filter, filter2, filter3, vol, Tone.Destination);
+        resolve(s);
+      },
+    }).toDestination();
+  });
+  Tone.Transport.scheduleRepeat(() => {
+    sampler.triggerAttack('C4');
+    sampler.triggerAttack('D4');
   }, '0');
 
-  const vinyl = new Tone.Player().toDestination();
-  await vinyl.load('vinyl.flac');
-  vinyl.volume.value = -20;
-  Tone.Transport.scheduleOnce(() => {
-    vinyl.chain(filter, filter2, filter3).start();
-  }, '0');
+  Tone.Transport.on('stop', () => {
+    sampler.releaseAll();
+    sampler.disconnect();
+  });
 }
 
 export default async function startSong() {
@@ -83,6 +108,7 @@ export default async function startSong() {
             wet: 0.5,
           }),
           filter4,
+          vol,
           Tone.Destination,
         );
         resolve(s);
@@ -90,7 +116,7 @@ export default async function startSong() {
     }).toDestination();
   });
 
-  sampler.chain(filter, Tone.Destination);
+  sampler.chain(filter, vol, Tone.Destination);
 
   startDrums(sampler);
 
@@ -105,7 +131,7 @@ export default async function startSong() {
     const harmonyNoteChoice = betweenInt(0, notes.length);
     if (Math.random() < 0.5) {
       synth
-        .chain(filter, filter2, filter3)
+        .chain(filter, filter2, filter3, vol)
         .triggerAttackRelease(
           notes[noteChoice],
           '8n',
@@ -113,7 +139,7 @@ export default async function startSong() {
           between(0.1, 0.2),
         );
       synth
-        .chain(filter, filter2, filter3)
+        .chain(filter, filter2, filter3, vol)
         .triggerAttackRelease(
           notes[harmonyNoteChoice],
           '8n',
@@ -141,7 +167,7 @@ export default async function startSong() {
     const delay = 0.03;
     for (const note of notes) {
       polysynth
-        .chain(filter, filter2, filter3)
+        .chain(filter, filter2, filter3, vol)
         .triggerAttackRelease(
           note,
           '8n',
@@ -150,6 +176,15 @@ export default async function startSong() {
         );
     }
   }, '4n');
+
+  Tone.Transport.on('stop', () => {
+    sampler.releaseAll();
+    synth.releaseAll();
+    polysynth.releaseAll();
+    sampler.disconnect();
+    synth.disconnect();
+    polysynth.disconnect();
+  });
 
   await addAmbientSounds(filter, filter2, filter3);
 
