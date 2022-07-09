@@ -27,9 +27,9 @@ const App: FC = () => {
         }
 
         await Tone.loaded();
-        setIsLoaded(true);
 
         await startSong();
+        setIsLoaded(true);
       } else {
         setIsLoaded(false);
         Tone.Transport.stop();
